@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>For My Favorite Person In The Universe ✨💖</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Canvas Confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Google Fonts: Dancing Script, Caveat, Outfit, Hind Siliguri -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Dancing+Script:wght@600;700&family=Hind+Siliguri:wght@400;600;700&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            hand: ['Dancing Script', 'Caveat', 'cursive'],
+            bengali: ['Hind Siliguri', 'sans-serif'],
+            sans: ['Outfit', 'sans-serif'],
+          },
+          colors: {
+            cotton: {
+              50: '#fff5f7',
+              100: '#ffe8ee',
+              200: '#ffd0dd',
+              300: '#ffa7bf',
+              400: '#ff6f96',
+              500: '#fa3b73',
+              600: '#e51a59',
+            },
+            pastel: {
+              lavender: '#F4EEFF',
+              cream: '#FFFDF9',
+              peach: '#FFEFEA',
+              blush: '#FFDCE5',
+              mint: '#EBFBF7'
+            }
+          },
+          animation: {
+            'float-slow': 'floating 5s ease-in-out infinite',
+            'float-reverse': 'floatingRev 6s ease-in-out infinite',
+            'bounce-soft': 'bounceSoft 2s infinite',
+            'glow-pulse': 'glowPulse 2.5s infinite',
+            'wiggle': 'wiggle 1s ease-in-out infinite',
+            'spin-slow': 'spin 10s linear infinite',
+          },
+          keyframes: {
+            floating: {
+              '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+              '50%': { transform: 'translateY(-12px) rotate(2deg)' },
+            },
+            floatingRev: {
+              '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+              '50%': { transform: 'translateY(10px) rotate(-3deg)' },
+            },
+            bounceSoft: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-8px)' }
+            },
+            glowPulse: {
+              '0%, 100%': { filter: 'drop-shadow(0 0 12px rgba(250, 59, 115, 0.4))' },
+              '50%': { filter: 'drop-shadow(0 0 24px rgba(250, 59, 115, 0.7))' }
+            },
+            wiggle: {
+              '0%, 100%': { transform: 'rotate(-3deg)' },
+              '50%': { transform: 'rotate(3deg)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    /* Background Canvas for petals & sparkles */
+    #magical-bg-canvas, #sparkle-trail-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    #magical-bg-canvas { z-index: 1; }
+    #sparkle-trail-canvas { z-index: 9999; }
+
+    /* Glassmorphism Classes */
+    .glassmorphism {
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      box-shadow: 0 18px 40px -10px rgba(255, 111, 150, 0.14), 0 8px 16px -6px rgba(255, 111, 150, 0.08);
+    }
+    .glass-pill {
+      background: rgba(255, 255, 255, 0.65);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+    }
+
+    /* Envelope 3D Visual Styling */
+    .envelope-3d-box {
+      perspective: 1200px;
+    }
+    .envelope-flap {
+      transform-origin: top;
+      transition: transform 0.75s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 30;
+    }
+    .envelope-pocket-front {
+      z-index: 25;
+    }
+    .letter-paper-slider {
+      transition: all 0.9s cubic-bezier(0.34, 1.35, 0.64, 1);
+      z-index: 10;
+      transform: translateY(0%);
+    }
+
+    /* Envelope Opened State */
+    .envelope-opened .envelope-flap {
+      transform: rotateX(180deg);
+      z-index: 5;
+    }
+    .envelope-opened .letter-paper-slider {
+      transform: translateY(-80%);
+      z-index: 35;
+      box-shadow: 0 25px 50px -12px rgba(244, 63, 94, 0.35);
+    }
+
+    /* 3D Flip Cards */
+    .perspective-card {
+      perspective: 1000px;
+    }
+    .card-flipper {
+      transform-style: preserve-3d;
+      transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .backface-hidden {
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+    .flipped-state {
+      transform: rotateY(180deg);
+    }
+
+    /* Tape simulation for Polaroids */
+    .washi-tape {
+      background: rgba(255, 209, 220, 0.7);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      transform: rotate(-3deg);
+    }
+    .washi-tape-alt {
+      background: rgba(216, 239, 255, 0.75);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      transform: rotate(4deg);
+    }
+
+    /* Blinking Cursor for Typewriter */
+    .type-cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1.1em;
+      background-color: #e51a59;
+      vertical-align: middle;
+      animation: blink 0.8s infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-cotton-50 via-pastel-peach to-pastel-lavender min-h-screen text-slate-700 font-sans selection:bg-cotton-200 selection:text-cotton-600 relative overflow-x-hidden">
+
+  <!-- Sakura petals & soft hearts background canvas -->
+  <canvas id="magical-bg-canvas"></canvas>
+  <!-- Mouse & Touch trail canvas -->
+  <canvas id="sparkle-trail-canvas"></canvas>
+
+  <div class="relative z-10 flex flex-col items-center w-full px-4 sm:px-6 max-w-5xl mx-auto py-6">
+
+    <!-- FLOATING TOP BAR -->
+    <header class="w-full flex justify-between items-center mb-6">
+      <div class="flex items-center gap-2 glass-pill px-4 py-2 rounded-full shadow-sm text-xs sm:text-sm text-cotton-600 font-medium animate-float-slow">
+        <span class="animate-bounce">🧸</span>
+        <span>A Special World Crafted Just For You</span>
+      </div>
+
+      <!-- LO-FI ROMANTIC SOUNDTRACK SYNTHESIZER -->
+      <div class="glass-pill px-3 py-1.5 rounded-full flex items-center gap-2.5 shadow-sm text-xs border border-white">
+        <div id="disc-record" class="w-7 h-7 rounded-full bg-gradient-to-tr from-pink-400 to-cotton-500 text-white flex items-center justify-center shadow-inner">
+          <i class="fa-solid fa-music text-xs"></i>
+        </div>
+        <div class="hidden sm:block text-left">
+          <p class="font-semibold text-slate-800 leading-tight">Sweet Lo-Fi Piano 🎹</p>
+          <span id="audio-status" class="text-[10px] text-cotton-500 font-medium">Click to hear music</span>
+        </div>
+        <button id="bgm-btn" class="w-8 h-8 rounded-full bg-cotton-500 hover:bg-cotton-600 text-white flex items-center justify-center transition shadow-md hover:scale-105 active:scale-95" title="Play cute melody">
+          <i id="bgm-icon" class="fa-solid fa-play text-xs ml-0.5"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- HERO SECTION WITH CUTE BEARS SVG DOODLE -->
+    <section class="text-center my-4 sm:my-8 max-w-2xl flex flex-col items-center">
+      
+      <!-- Animated Cute Bear Couple SVG -->
+      <div class="relative w-40 h-32 sm:w-48 sm:h-36 mb-2">
+        <svg viewBox="0 0 200 140" class="w-full h-full drop-shadow-md animate-float-slow">
+          <!-- Left Bear (Pink cheeks) -->
+          <g transform="translate(45, 30)">
+            <ellipse cx="30" cy="35" rx="26" ry="24" fill="#FCE7D8" stroke="#E29578" stroke-width="2.5"/>
+            <!-- Ears -->
+            <circle cx="12" cy="16" r="9" fill="#FCE7D8" stroke="#E29578" stroke-width="2.5"/>
+            <circle cx="12" cy="16" r="4.5" fill="#FFB4A2"/>
+            <circle cx="48" cy="16" r="9" fill="#FCE7D8" stroke="#E29578" stroke-width="2.5"/>
+            <circle cx="48" cy="16" r="4.5" fill="#FFB4A2"/>
+            <!-- Eyes & Cheeks -->
+            <ellipse cx="23" cy="34" rx="2.5" ry="3.5" fill="#4A3F35"/>
+            <ellipse cx="37" cy="34" rx="2.5" ry="3.5" fill="#4A3F35"/>
+            <circle cx="18" cy="40" r="5" fill="#FF8FA3" opacity="0.6"/>
+            <circle cx="42" cy="40" r="5" fill="#FF8FA3" opacity="0.6"/>
+            <!-- Nose & Smile -->
+            <ellipse cx="30" cy="39" rx="4" ry="2.5" fill="#FFB4A2"/>
+            <path d="M28,41 Q30,44 32,41" fill="none" stroke="#4A3F35" stroke-width="1.8" stroke-linecap="round"/>
+          </g>
+
+          <!-- Right Bear (Tilted sweet) -->
+          <g transform="translate(95, 32)">
+            <ellipse cx="30" cy="35" rx="26" ry="24" fill="#FFF1E6" stroke="#DDA15E" stroke-width="2.5"/>
+            <!-- Ears with cute red bow -->
+            <circle cx="12" cy="16" r="9" fill="#FFF1E6" stroke="#DDA15E" stroke-width="2.5"/>
+            <circle cx="48" cy="16" r="9" fill="#FFF1E6" stroke="#DDA15E" stroke-width="2.5"/>
+            <!-- Red Hairclip Ribbon -->
+            <path d="M10,13 Q14,9 18,14 Q14,19 10,13 Z" fill="#FA3B73"/>
+            <path d="M26,13 Q22,9 18,14 Q22,19 26,13 Z" fill="#FA3B73"/>
+            <circle cx="18" cy="14" r="2.5" fill="#FFCCD5"/>
+            <!-- Happy Wink & Smile -->
+            <path d="M21,34 Q24,31 27,34" fill="none" stroke="#4A3F35" stroke-width="2" stroke-linecap="round"/>
+            <ellipse cx="38" cy="34" rx="2.5" ry="3.5" fill="#4A3F35"/>
+            <circle cx="19" cy="41" r="5" fill="#FF8FA3" opacity="0.6"/>
+            <circle cx="43" cy="41" r="5" fill="#FF8FA3" opacity="0.6"/>
+            <ellipse cx="31" cy="40" rx="4" ry="2.5" fill="#FFCAD4"/>
+            <path d="M29,42 Q31,45 33,42" fill="none" stroke="#4A3F35" stroke-width="1.8" stroke-linecap="round"/>
+          </g>
+
+          <!-- Floating Love Heart between them -->
+          <g class="animate-bounce-soft" transform="translate(92, 14)">
+            <path d="M8,15 C8,15 0,9 0,4.5 C0,1.5 2.2,0 4.5,0 C6.3,0 7.5,1.5 8,2.5 C8.5,1.5 9.7,0 11.5,0 C13.8,0 16,1.5 16,4.5 C16,9 8,15 8,15 Z" fill="#FA3B73"/>
+            <circle cx="5" cy="4" r="1.5" fill="#FFF" opacity="0.8"/>
+          </g>
+        </svg>
+      </div>
+
+      <!-- Main Heading (Customizable Name) -->
+      <h1 class="text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-slate-800 mb-2 leading-tight">
+        Hello My Sweetest <br class="sm:hidden">
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-cotton-500 via-rose-500 to-pink-500 underline decoration-cotton-300 decoration-wavy decoration-2">[Saimuuuuuuu]</span> 💖
+      </h1>
+
+      <p class="text-base sm:text-xl text-slate-600 font-light max-w-xl mx-auto leading-relaxed mt-2 font-bengali">
+        তুমি আমার জীবনের সবচেয়ে সুন্দর গল্প। আজকের এই ছোট্ট জাদুকরী পাতাটি শুধু তোমার মিষ্টি মুখে এক চিলতে হাসি ফোটানোর জন্য তৈরি করেছি। 🌸
+      </p>
+
+      <div class="mt-6 flex flex-wrap gap-4 justify-center items-center">
+        <a href="#letter-section" class="px-7 py-3 rounded-full bg-gradient-to-r from-cotton-500 to-rose-500 hover:from-cotton-600 hover:to-rose-600 text-white font-semibold shadow-lg shadow-cotton-200 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5 flex items-center gap-2 group">
+          <span>Open My Love Letter</span>
+          <i class="fa-solid fa-envelope-open-text group-hover:rotate-12 transition-transform"></i>
+        </a>
+        <a href="#love-jar" class="px-6 py-3 rounded-full bg-white hover:bg-cotton-50 text-cotton-600 font-semibold border-2 border-cotton-200 shadow-sm transition-all duration-300 flex items-center gap-2">
+          <span>Star Jar 🌟</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- RELATIONSHIP COUNTER / TIME CAPSULE -->
+    <section class="w-full max-w-2xl my-6">
+      <div class="glassmorphism rounded-3xl p-6 sm:p-8 text-center border-2 border-white relative overflow-hidden">
+        <div class="absolute -top-10 -right-10 w-32 h-32 bg-pink-200/40 rounded-full blur-2xl pointer-events-none"></div>
+        <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-purple-200/40 rounded-full blur-2xl pointer-events-none"></div>
+
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cotton-100 text-cotton-600 text-xs font-semibold mb-3">
+          <i class="fa-solid fa-clock-rotate-left text-xs"></i>
+          <span>Our Precious Journey So Far</span>
+        </div>
+        
+        <h3 class="text-xl sm:text-2xl font-bold text-slate-800 mb-4 font-bengali">আমাদের একসাথে কাটানো মিষ্টি প্রতিটি ক্ষণ ⏳</h3>
+
+        <div class="grid grid-cols-4 gap-2 sm:gap-4 my-2">
+          <div class="bg-white/90 p-3 sm:p-4 rounded-2xl shadow-sm border border-cotton-100 group hover:border-cotton-300 transition">
+            <span id="days" class="text-2xl sm:text-4xl font-extrabold text-cotton-500 block tracking-tight">000</span>
+            <p class="text-[11px] sm:text-xs font-medium text-slate-500 mt-1 uppercase">Days</p>
+          </div>
+          <div class="bg-white/90 p-3 sm:p-4 rounded-2xl shadow-sm border border-cotton-100 group hover:border-cotton-300 transition">
+            <span id="hours" class="text-2xl sm:text-4xl font-extrabold text-slate-800 block tracking-tight">00</span>
+            <p class="text-[11px] sm:text-xs font-medium text-slate-500 mt-1 uppercase">Hours</p>
+          </div>
+          <div class="bg-white/90 p-3 sm:p-4 rounded-2xl shadow-sm border border-cotton-100 group hover:border-cotton-300 transition">
+            <span id="mins" class="text-2xl sm:text-4xl font-extrabold text-slate-800 block tracking-tight">00</span>
+            <p class="text-[11px] sm:text-xs font-medium text-slate-500 mt-1 uppercase">Mins</p>
+          </div>
+          <div class="bg-white/90 p-3 sm:p-4 rounded-2xl shadow-sm border border-cotton-100 group hover:border-cotton-300 transition">
+            <span id="secs" class="text-2xl sm:text-4xl font-extrabold text-rose-500 block tracking-tight animate-pulse">00</span>
+            <p class="text-[11px] sm:text-xs font-medium text-slate-500 mt-1 uppercase">Secs</p>
+          </div>
+        </div>
+
+        <p class="text-sm text-slate-500 mt-3 font-bengali">
+          প্রতিটি দিন, প্রতিটি পলকে মনে হয়... <span class="text-cotton-500 font-semibold font-hand text-lg">"You are my greatest blessing"</span> ❤️
+        </p>
+      </div>
+    </section>
+
+    <!-- SECTION 1: REALISTIC 3D ROMANTIC LOVE LETTER & TYPEWRITER -->
+    <section id="letter-section" class="w-full max-w-xl my-16 text-center">
+      <div class="mb-6">
+        <span class="text-xs uppercase tracking-widest font-bold text-cotton-500 bg-cotton-100 px-3 py-1 rounded-full">From The Depths Of My Soul</span>
+        <h2 class="text-2xl sm:text-3xl font-bold text-slate-800 mt-2 font-bengali">তোমার জন্য একটি গোপন প্রেমপত্র 💌</h2>
+        <p class="text-xs sm:text-sm text-slate-500 mt-1">লাল মোমের সিলটিতে আলতো চাপ দিয়ে চিঠিটি উন্মোচন করো</p>
+      </div>
+
+      <!-- 3D Realistic Envelope Container -->
+      <div class="envelope-3d-box relative mx-auto w-80 sm:w-96 h-60 select-none cursor-pointer flex justify-center items-end" id="envelope-trigger">
+        
+        <!-- The Letter Sheet (Slides UP when opened) -->
+        <div id="letter-sheet" class="letter-paper-slider absolute top-4 w-72 sm:w-84 min-h-[300px] bg-gradient-to-b from-[#FFFDF8] to-[#FFF9EE] rounded-xl p-6 sm:p-7 shadow-lg border border-amber-200 text-left pointer-events-auto">
+          
+          <div class="flex justify-between items-start border-b border-rose-200 pb-2 mb-3">
+            <div>
+              <h4 class="font-hand text-2xl font-bold text-cotton-600">Dear [Her Nickname/Love],</h4>
+              <p class="text-[11px] text-slate-400 font-mono">Date: Today & Forever</p>
+            </div>
+            <span class="text-2xl">💌</span>
+          </div>
+
+          <!-- Typewriter container -->
+          <div id="typewriter-text" class="font-hand text-lg sm:text-xl text-slate-700 leading-relaxed min-h-[140px]">
+            <!-- Dynamic text types here -->
+          </div>
+          <span id="type-cursor" class="type-cursor hidden"></span>
+
+          <div class="mt-4 pt-2 border-t border-rose-100 flex justify-between items-end">
+            <span class="text-xs text-cotton-400 font-bengali">অনন্ত ভালোবাসার সাথে,</span>
+            <div class="text-right">
+              <p class="font-hand text-lg font-bold text-cotton-600 leading-none">[Ayaan]</p>
+              <span class="text-[10px] text-slate-400">Always Yours</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Envelope Body Components -->
+        <!-- 1. Back flap -->
+        <div class="absolute inset-0 bg-[#fca5a5] rounded-b-2xl shadow-xl z-0"></div>
+
+        <!-- 2. Animated Top Flap (Triangular fold) -->
+        <div class="envelope-flap absolute top-0 left-0 w-full h-0 border-l-[160px] sm:border-l-[192px] border-l-transparent border-r-[160px] sm:border-r-[192px] border-r-transparent border-t-[120px] sm:border-t-[130px] border-t-rose-300 drop-shadow-md"></div>
+
+        <!-- 3. Front Pocket Triangles (Left, Right, Bottom) -->
+        <div class="envelope-pocket-front absolute inset-0 pointer-events-none flex items-end">
+          <!-- Left Fold -->
+          <div class="w-0 h-0 border-b-[140px] sm:border-b-[150px] border-b-rose-200/90 border-r-[160px] sm:border-r-[192px] border-r-transparent absolute left-0 bottom-0 rounded-bl-2xl"></div>
+          <!-- Right Fold -->
+          <div class="w-0 h-0 border-b-[140px] sm:border-b-[150px] border-b-rose-200/90 border-l-[160px] sm:border-l-[192px] border-l-transparent absolute right-0 bottom-0 rounded-br-2xl"></div>
+          <!-- Bottom Fold Overlay -->
+          <div class="w-full h-0 border-b-[120px] sm:border-b-[130px] border-b-rose-300 border-l-[160px] sm:border-l-[192px] border-l-transparent border-r-[160px] sm:border-r-[192px] border-r-transparent rounded-b-2xl"></div>
+        </div>
+
+        <!-- 4. Vintage Wax Seal Heart -->
+        <div id="wax-seal" class="absolute z-40 top-20 sm:top-24 w-14 h-14 bg-gradient-to-tr from-cotton-600 via-rose-600 to-red-500 rounded-full flex flex-col items-center justify-center text-white shadow-xl border-2 border-rose-300 hover:scale-110 active:scale-95 transition-all duration-300">
+          <i class="fa-solid fa-heart text-xl animate-pulse"></i>
+          <span class="text-[8px] font-bold tracking-tighter uppercase mt-0.5">FOR YOU</span>
+        </div>
+      </div>
+
+      <p id="envelope-hint" class="text-xs text-cotton-500 font-medium mt-12 animate-pulse">
+        👆 Tap the wax seal to open & read the secret letter
+      </p>
+    </section>
+
+    <!-- SECTION 2: INTERACTIVE "LOVE STAR JAR" (Pop Cute Reasons) -->
+    <section id="love-jar" class="w-full max-w-xl my-12">
+      <div class="glassmorphism rounded-3xl p-6 sm:p-8 text-center border-2 border-white relative shadow-lg">
+        <span class="text-xs uppercase tracking-wider font-bold text-cotton-500 bg-cotton-100 px-3 py-1 rounded-full">Interactive Jar</span>
+        <h3 class="text-2xl font-bold text-slate-800 mt-2 font-bengali">The "Why I Adore You" Star Jar 🌟</h3>
+        <p class="text-xs sm:text-sm text-slate-500 mt-1 font-bengali">জারে ক্লিক করলেই বের হয়ে আসবে তোমাকে ভালোবাসার মিষ্টি একেকটি কারণ!</p>
+
+        <!-- Cute Glass Jar Graphic -->
+        <div class="my-6 relative flex justify-center">
+          <div id="jar-button" class="cursor-pointer relative w-36 h-48 sm:w-40 sm:h-52 bg-white/40 border-4 border-white/80 rounded-b-3xl rounded-t-lg shadow-inner flex flex-col items-center justify-center group hover:scale-105 transition-transform duration-300">
+            <!-- Jar Cork / Lid -->
+            <div class="absolute -top-4 w-28 sm:w-32 h-6 bg-amber-700/60 rounded-md border-2 border-amber-900/20 shadow"></div>
+            <!-- Ribon tied around neck -->
+            <div class="absolute top-2 w-full h-2 bg-cotton-400"></div>
+
+            <!-- Floating origami stars inside jar -->
+            <div class="text-2xl animate-bounce-soft flex gap-1">✨ 💖 🌟</div>
+            <div class="text-xl animate-bounce flex gap-2 mt-2">⭐ 🍬 🌸</div>
+            <div class="text-xs font-semibold text-cotton-500 bg-white/80 px-2 py-1 rounded-full mt-3 shadow-sm group-hover:bg-cotton-500 group-hover:text-white transition">
+              Tap the Jar 💫
+            </div>
+          </div>
+        </div>
+
+        <!-- Pop-up Reason Capsule -->
+        <div id="star-reason-box" class="min-h-[75px] bg-white/90 p-4 rounded-2xl border border-cotton-200 flex items-center justify-center shadow-sm">
+          <p id="star-reason-text" class="text-sm sm:text-base font-bengali font-semibold text-slate-700">
+            "জারটিতে চাপ দিয়ে তোমার জন্য রাখা গোপন চিরকুটগুলো দেখো... 💌"
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: REASONS FLIP CARDS WITH SOFT GLOW -->
+    <section class="w-full my-12">
+      <div class="text-center mb-8">
+        <span class="text-cotton-500 font-bold tracking-widest text-xs uppercase bg-cotton-100 px-3 py-1 rounded-full">Secret Compliments</span>
+        <h2 class="text-2xl sm:text-3xl font-bold text-slate-800 mt-2 font-bengali">যে কারণগুলোতে আমি বারবার প্রেমে পড়ি ✨</h2>
+        <p class="text-xs sm:text-sm text-slate-500 mt-1">কার্ডগুলোতে ক্লিক করে পেছনের মিষ্টি বার্তাটি পড়ে নাও</p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <!-- Flip Card 1 -->
+        <div class="perspective-card h-64 cursor-pointer flip-card-elem">
+          <div class="card-flipper relative w-full h-full rounded-3xl shadow-md">
+            <!-- Front -->
+            <div class="backface-hidden absolute inset-0 glassmorphism rounded-3xl p-6 flex flex-col items-center justify-center text-center border-2 border-white">
+              <div class="w-16 h-16 rounded-2xl bg-cotton-100 text-cotton-500 flex items-center justify-center text-3xl mb-3 shadow-inner">
+                🌷
+              </div>
+              <h3 class="font-bold text-lg text-slate-800 font-bengali">তোমার মায়াবী হাসি</h3>
+              <p class="text-xs text-slate-500 mt-1 font-bengali">যা এক পলকেই আমার সব ক্লান্তি ভুলিয়ে দেয়...</p>
+              <span class="mt-4 text-xs font-semibold text-cotton-500 bg-white px-3 py-1 rounded-full shadow-sm">Touch to reveal ↷</span>
+            </div>
+            <!-- Back -->
+            <div class="backface-hidden flipped-state absolute inset-0 bg-gradient-to-br from-cotton-400 to-rose-500 text-white rounded-3xl p-6 flex flex-col items-center justify-center text-center shadow-xl">
+              <span class="text-3xl mb-2">✨</span>
+              <p class="text-sm font-bengali leading-relaxed">
+                "তোমার হাসির চেয়ে মিষ্টি আর মন জুড়ানো সুর এই পৃথিবীতে আর দ্বিতীয়টি নেই। প্লিজ সবসময় এভাবেই হাসিখুশি থেকো।"
+              </p>
+              <span class="mt-3 text-[11px] bg-white/20 px-3 py-1 rounded-full">My Favorite View 💖</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Flip Card 2 -->
+        <div class="perspective-card h-64 cursor-pointer flip-card-elem">
+          <div class="card-flipper relative w-full h-full rounded-3xl shadow-md">
+            <!-- Front -->
+            <div class="backface-hidden absolute inset-0 glassmorphism rounded-3xl p-6 flex flex-col items-center justify-center text-center border-2 border-white">
+              <div class="w-16 h-16 rounded-2xl bg-amber-100 text-amber-500 flex items-center justify-center text-3xl mb-3 shadow-inner">
+                🧸
+              </div>
+              <h3 class="font-bold text-lg text-slate-800 font-bengali">তোমার মিষ্টি ছেলেমানুষি</h3>
+              <p class="text-xs text-slate-500 mt-1 font-bengali">ছোট ছোট ব্যাপারে রেগে যাওয়া আর বায়না করা...</p>
+              <span class="mt-4 text-xs font-semibold text-cotton-500 bg-white px-3 py-1 rounded-full shadow-sm">Touch to reveal ↷</span>
+            </div>
+            <!-- Back -->
+            <div class="backface-hidden flipped-state absolute inset-0 bg-gradient-to-br from-pink-400 to-cotton-500 text-white rounded-3xl p-6 flex flex-col items-center justify-center text-center shadow-xl">
+              <span class="text-3xl mb-2">🎀</span>
+              <p class="text-sm font-bengali leading-relaxed">
+                "যখন তুমি অভিমান করো কিংবা কোনো ছোট জিনিসে ভীষণ খুশি হয়ে যাও—তুমি দেখতে পৃথিবীর সবচেয়ে নিষ্পাপ রাজকন্যার মতো লাগো!"
+              </p>
+              <span class="mt-3 text-[11px] bg-white/20 px-3 py-1 rounded-full">Forever My Cutie 🥺</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Flip Card 3 -->
+        <div class="perspective-card h-64 cursor-pointer flip-card-elem">
+          <div class="card-flipper relative w-full h-full rounded-3xl shadow-md">
+            <!-- Front -->
+            <div class="backface-hidden absolute inset-0 glassmorphism rounded-3xl p-6 flex flex-col items-center justify-center text-center border-2 border-white">
+              <div class="w-16 h-16 rounded-2xl bg-purple-100 text-purple-500 flex items-center justify-center text-3xl mb-3 shadow-inner">
+                🌙
+              </div>
+              <h3 class="font-bold text-lg text-slate-800 font-bengali">তোমার যত্নশীল মন</h3>
+              <p class="text-xs text-slate-500 mt-1 font-bengali">যেভাবে তুমি আমার ছোট ছোট বিষয়ের খেয়াল রাখো...</p>
+              <span class="mt-4 text-xs font-semibold text-cotton-500 bg-white px-3 py-1 rounded-full shadow-sm">Touch to reveal ↷</span>
+            </div>
+            <!-- Back -->
+            <div class="backface-hidden flipped-state absolute inset-0 bg-gradient-to-br from-purple-400 to-rose-500 text-white rounded-3xl p-6 flex flex-col items-center justify-center text-center shadow-xl">
+              <span class="text-3xl mb-2">🕊️</span>
+              <p class="text-sm font-bengali leading-relaxed">
+                "তুমি শুধু আমার প্রিয় মানুষ নও, আমার মানসিক প্রশান্তি। তোমার মতো ভালোবাসতে আর কেউ পারে না।"
+              </p>
+              <span class="mt-3 text-[11px] bg-white/20 px-3 py-1 rounded-full">My Safe Haven 🏡</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: POLAROID MEMORY PHOTO GALLERY WITH WASHI TAPE -->
+    <section class="w-full my-12">
+      <div class="glassmorphism rounded-3xl p-6 sm:p-10 border-2 border-white">
+        <div class="text-center mb-8">
+          <span class="text-xs font-bold text-cotton-500 uppercase tracking-wider bg-cotton-100 px-3 py-1 rounded-full">Captured Moments</span>
+          <h3 class="text-2xl sm:text-3xl font-bold text-slate-800 mt-2 font-bengali">আমাদের সোনালী স্মৃতিগুলো 📸</h3>
+          <p class="text-xs sm:text-sm text-slate-500 font-bengali">একসাথে কাটানো প্রতিটি পল আমার জীবনের সেরা উপহার</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-8 pt-4">
+          <!-- Polaroid 1 -->
+          <div class="relative bg-white p-4 pb-6 rounded-sm shadow-md hover:shadow-xl transform hover:-rotate-2 hover:scale-105 transition duration-300">
+            <!-- Washi tape at top -->
+            <div class="washi-tape absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-6 z-20"></div>
+            <div class="w-full h-52 bg-slate-100 overflow-hidden rounded-sm">
+              <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=600&auto=format&fit=crop&q=80" alt="Special memory" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x400/ffd0dd/e51a59?text=Our+Precious+Date'">
+            </div>
+            <p class="font-hand text-center text-2xl text-slate-700 mt-4 leading-none">"Holding your hands..."</p>
+            <p class="text-center text-[11px] text-slate-400 mt-1 font-bengali">যেন সময় থমকে গিয়েছিল ✨</p>
+          </div>
+
+          <!-- Polaroid 2 -->
+          <div class="relative bg-white p-4 pb-6 rounded-sm shadow-md hover:shadow-xl transform hover:rotate-2 hover:scale-105 transition duration-300">
+            <!-- Washi tape at top -->
+            <div class="washi-tape-alt absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-6 z-20"></div>
+            <div class="w-full h-52 bg-slate-100 overflow-hidden rounded-sm">
+              <img src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=600&auto=format&fit=crop&q=80" alt="Happy moments" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x400/ffe8ee/fa3b73?text=Smiling+Together'">
+            </div>
+            <p class="font-hand text-center text-2xl text-slate-700 mt-4 leading-none">"Endless laughs & talks"</p>
+            <p class="text-center text-[11px] text-slate-400 mt-1 font-bengali">হাসতে হাসতে পেট ব্যথা হওয়া দিনগুলো 🌸</p>
+          </div>
+
+          <!-- Polaroid 3 -->
+          <div class="relative bg-white p-4 pb-6 rounded-sm shadow-md hover:shadow-xl transform hover:-rotate-1 hover:scale-105 transition duration-300">
+            <!-- Washi tape at top -->
+            <div class="washi-tape absolute -top-3 left-1/2 -translate-x-1/2 w-24 h-6 z-20"></div>
+            <div class="w-full h-52 bg-slate-100 overflow-hidden rounded-sm">
+              <img src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=600&auto=format&fit=crop&q=80" alt="Forever with you" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x400/ffd0dd/e51a59?text=Forever+And+Always'">
+            </div>
+            <p class="font-hand text-center text-2xl text-slate-700 mt-4 leading-none">"You are my whole world"</p>
+            <p class="text-center text-[11px] text-slate-400 mt-1 font-bengali">আজ, কাল এবং সারাজীবন ❤️</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 5: "WILL YOU BE MY VALENTINE/DATE?" DODGING NO BUTTON -->
+    <section id="question-box" class="w-full max-w-xl my-12 relative">
+      <div class="glassmorphism rounded-3xl p-8 sm:p-12 text-center relative overflow-hidden border-2 border-white shadow-xl">
+        
+        <div id="proposal-wrapper">
+          <div class="text-5xl mb-3 animate-wiggle">💐</div>
+          <h2 class="text-2xl sm:text-3xl font-bold text-slate-800 font-bengali">
+            একটি অত্যন্ত গুরুত্বপূর্ণ প্রশ্ন...
+          </h2>
+          <p class="text-slate-600 font-bengali text-sm sm:text-base mt-2 max-w-md mx-auto">
+            তুমি কি সারাজীবন আমার ভালোবাসার মানুষ, আমার বেস্ট ফ্রেন্ড এবং জীবনের সবচেয়ে মিষ্টি অংশ হয়ে থাকবে? 👉👈
+          </p>
+
+          <!-- Buttons Container -->
+          <div id="dodge-arena" class="relative flex items-center justify-center gap-6 min-h-[110px] mt-6">
+            <!-- YES BUTTON -->
+            <button id="yes-btn" class="px-8 py-3.5 rounded-full bg-gradient-to-r from-cotton-500 via-rose-500 to-pink-500 text-white font-bold text-lg shadow-lg shadow-cotton-300 hover:scale-110 active:scale-95 transition-all duration-300 z-10 flex items-center gap-2">
+              <span>হ্যাঁ, সারাজীবন!</span>
+              <span class="animate-bounce">💖</span>
+            </button>
+
+            <!-- NO BUTTON (Dodges cursor and touch) -->
+            <button id="no-dodge-btn" class="px-6 py-2.5 rounded-full bg-slate-200 text-slate-600 font-semibold text-sm hover:bg-slate-300 transition-all duration-150 select-none z-10">
+              না 🙈
+            </button>
+          </div>
+        </div>
+
+        <!-- CELEBRATION BOX ON YES -->
+        <div id="yes-celebration" class="hidden py-6 animate-fade-in">
+          <div class="text-6xl mb-3 animate-bounce">🎉👰💍💖</div>
+          <h3 class="text-3xl sm:text-4xl font-extrabold text-cotton-600 font-hand">Yaaay!! You are stuck with me forever!</h3>
+          <p class="text-slate-700 font-bengali font-semibold mt-2 text-base">
+            আমি কথা দিচ্ছি তোমাকে সবসময় পৃথিবীর সবচেয়ে সুখী আর হাসিখুশি রাজকন্যা করে রাখবো! 🍦🌸
+          </p>
+          <div class="mt-5 p-3.5 bg-cotton-100 rounded-2xl text-xs sm:text-sm text-cotton-600 font-bold inline-block border border-cotton-200 shadow-inner">
+            📸 জলদি একটা স্ক্রিনশট নাও আর আমাকে এখনি পাঠাও! 💕
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="mt-8 text-center text-xs text-slate-400 pb-10">
+      <p class="flex items-center justify-center gap-1.5 font-bengali">
+        <span>অনেক ভালোবাসা দিয়ে শুধু তোমার জন্য তৈরি</span>
+        <i class="fa-solid fa-heart text-cotton-500 animate-pulse"></i>
+      </p>
+      <p class="mt-1 text-[11px] text-slate-300 font-hand text-base">You make the universe a prettier place</p>
+    </footer>
+
+  </div>
+
+  <!-- SCRIPT LOGIC -->
+  <script>
+    /* ========================================================
+       1. CHERRY BLOSSOM / SAKURA & FLOATING HEARTS CANVAS
+       ======================================================== */
+    const bgCanvas = document.getElementById('magical-bg-canvas');
+    const bgCtx = bgCanvas.getContext('2d');
+    let bgParticles = [];
+
+    function resizeBg() {
+      bgCanvas.width = window.innerWidth;
+      bgCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeBg);
+    resizeBg();
+
+    class MagicalPetal {
+      constructor() {
+        this.reset();
+      }
+      reset() {
+        this.x = Math.random() * bgCanvas.width;
+        this.y = -20;
+        this.size = Math.random() * 10 + 6;
+        this.speedY = Math.random() * 1.2 + 0.6;
+        this.speedX = Math.random() * 1.5 - 0.5;
+        this.angle = Math.random() * Math.PI * 2;
+        this.spin = Math.random() * 0.03 - 0.015;
+        this.type = Math.random() > 0.4 ? 'petal' : 'heart';
+        this.opacity = Math.random() * 0.5 + 0.2;
+      }
+      update() {
+        this.y += this.speedY;
+        this.x += Math.sin(this.angle) * 0.8 + this.speedX;
+        this.angle += this.spin;
+        if (this.y > bgCanvas.height + 20 || this.x < -20 || this.x > bgCanvas.width + 20) {
+          this.reset();
+        }
+      }
+      draw() {
+        bgCtx.save();
+        bgCtx.translate(this.x, this.y);
+        bgCtx.rotate(this.angle);
+        bgCtx.globalAlpha = this.opacity;
+
+        if (this.type === 'petal') {
+          // Sakura Petal shape
+          bgCtx.fillStyle = '#ffb3c6';
+          bgCtx.beginPath();
+          bgCtx.ellipse(0, 0, this.size * 0.7, this.size, Math.PI / 4, 0, Math.PI * 2);
+          bgCtx.fill();
+        } else {
+          // Soft heart
+          bgCtx.fillStyle = '#fa3b73';
+          bgCtx.beginPath();
+          const s = this.size * 0.8;
+          bgCtx.moveTo(0, s / 4);
+          bgCtx.bezierCurveTo(0, 0, -s / 2, 0, -s / 2, s / 2);
+          bgCtx.bezierCurveTo(-s / 2, (3 * s) / 4, 0, (3 * s) / 4, 0, s);
+          bgCtx.bezierCurveTo(0, (3 * s) / 4, s / 2, (3 * s) / 4, s / 2, s / 2);
+          bgCtx.bezierCurveTo(s / 2, 0, 0, 0, 0, s / 4);
+          bgCtx.fill();
+        }
+        bgCtx.restore();
+      }
+    }
+
+    for (let i = 0; i < 35; i++) {
+      const p = new MagicalPetal();
+      p.y = Math.random() * window.innerHeight; // initial spread
+      bgParticles.push(p);
+    }
+
+    function animateBg() {
+      bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+      bgParticles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      requestAnimationFrame(animateBg);
+    }
+    animateBg();
+
+    /* ========================================================
+       2. MOUSE & TOUCH SPARKLE / GLOW TRAIL
+       ======================================================== */
+    const trailCanvas = document.getElementById('sparkle-trail-canvas');
+    const trailCtx = trailCanvas.getContext('2d');
+    let trailParticles = [];
+
+    function resizeTrail() {
+      trailCanvas.width = window.innerWidth;
+      trailCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeTrail);
+    resizeTrail();
+
+    function addTrailSparkle(x, y) {
+      for (let i = 0; i < 2; i++) {
+        trailParticles.push({
+          x: x + (Math.random() - 0.5) * 12,
+          y: y + (Math.random() - 0.5) * 12,
+          size: Math.random() * 5 + 3,
+          color: ['#ff4d6d', '#ff758f', '#ffb3c6', '#ffd166'][Math.floor(Math.random() * 4)],
+          alpha: 1,
+          decay: Math.random() * 0.03 + 0.02,
+          vx: (Math.random() - 0.5) * 1.5,
+          vy: (Math.random() - 0.5) * 1.5,
+        });
+      }
+    }
+
+    window.addEventListener('mousemove', (e) => {
+      addTrailSparkle(e.clientX, e.clientY);
+    });
+    window.addEventListener('touchmove', (e) => {
+      if (e.touches.length > 0) {
+        addTrailSparkle(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    }, { passive: true });
+
+    function renderTrail() {
+      trailCtx.clearRect(0, 0, trailCanvas.width, trailCanvas.height);
+      for (let i = trailParticles.length - 1; i >= 0; i--) {
+        const p = trailParticles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.alpha -= p.decay;
+        if (p.alpha <= 0) {
+          trailParticles.splice(i, 1);
+          continue;
+        }
+        trailCtx.save();
+        trailCtx.globalAlpha = p.alpha;
+        trailCtx.fillStyle = p.color;
+        trailCtx.beginPath();
+        // Cute 4-point sparkle star
+        trailCtx.arc(p.x, p.y, p.size * 0.5, 0, Math.PI * 2);
+        trailCtx.fill();
+        trailCtx.restore();
+      }
+      requestAnimationFrame(renderTrail);
+    }
+    renderTrail();
+
+    /* ========================================================
+       3. RELATIONSHIP COUNTER (Custom Date)
+       ======================================================== */
+    // Change this date to when you guys first met or started dating!
+    const ourLoveStart = new Date('2024-01-01T00:00:00');
+
+    function updateTimeCapsule() {
+      const now = new Date();
+      const diff = now - ourLoveStart;
+
+      const seconds = Math.floor((diff / 1000) % 60);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+      document.getElementById('days').textContent = days;
+      document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+      document.getElementById('mins').textContent = String(minutes).padStart(2, '0');
+      document.getElementById('secs').textContent = String(seconds).padStart(2, '0');
+    }
+    setInterval(updateTimeCapsule, 1000);
+    updateTimeCapsule();
+
+    /* ========================================================
+       4. INTERACTIVE 3D ENVELOPE & TYPEWRITER LETTER
+       ======================================================== */
+    const envelope = document.getElementById('envelope-trigger');
+    const envelopeHint = document.getElementById('envelope-hint');
+    const typewriterEl = document.getElementById('typewriter-text');
+    const typeCursor = document.getElementById('type-cursor');
+    let isEnvelopeOpen = false;
+    let typeWriterInterval = null;
+
+    // Love letter content: emotional mix of sweet English & Bengali
+    const letterText = "তুমি এলে বলেই আমার পৃথিবীতে বসন্ত এসেছে। তোমার ওই মিষ্টি চোখের চাহনি আর এক চিলতে হাসি আমার সারাদিনের ক্লান্তি মুছে দেয়। পৃথিবীর সব ব্যস্ততার ভিড়ে তুমিই আমার শান্তি, আমার ঘর। কথা দিচ্ছি, জীবনের প্রতিটি পদক্ষেপে তোমার হাত ধরে পাশে থাকবো। ভালোবাসি তোমায় অনন্তকাল... ❤️✨";
+
+    function startTypewriter() {
+      typewriterEl.textContent = "";
+      typeCursor.classList.remove('hidden');
+      let index = 0;
+      if (typeWriterInterval) clearInterval(typeWriterInterval);
+
+      typeWriterInterval = setInterval(() => {
+        if (index < letterText.length) {
+          typewriterEl.textContent += letterText.charAt(index);
+          index++;
+        } else {
+          clearInterval(typeWriterInterval);
+          typeCursor.classList.add('hidden');
+        }
+      }, 45);
+    }
+
+    envelope.addEventListener('click', () => {
+      isEnvelopeOpen = !isEnvelopeOpen;
+      envelope.classList.toggle('envelope-opened', isEnvelopeOpen);
+
+      if (isEnvelopeOpen) {
+        envelopeHint.textContent = "✨ Sealed in my heart forever! (Tap again to close)";
+        // Burst of soft confetti
+        confetti({
+          particleCount: 30,
+          spread: 60,
+          origin: { y: 0.6 }
+        });
+        setTimeout(startTypewriter, 500);
+      } else {
+        envelopeHint.textContent = "👆 Tap the wax seal to open & read the secret letter";
+        if (typeWriterInterval) clearInterval(typeWriterInterval);
+        typewriterEl.textContent = "";
+        typeCursor.classList.add('hidden');
+      }
+    });
+
+    /* ========================================================
+       5. "WHY I ADORE YOU" STAR JAR (POP REASONS)
+       ======================================================== */
+    const reasonsList = [
+      "তোমার মায়াবী কণ্ঠ শুনলেই আমার মন শান্ত হয়ে যায়। 🌸",
+      "তোমার সাথে কাটানো প্রতিটা সাধারণ মুহূর্তও স্পেশাল মনে হয়। ✨",
+      "তুমি যেভাবে আমার ছোট ছোট স্বপ্নগুলোকে সাপোর্ট করো। 💖",
+      "তুমি যখন বাচ্চাদের মতো মুখ ফুলিয়ে অভিমান করো! 🥺",
+      "তোমার মতো কেয়ারিং আর খাঁটি মনের মানুষ কোটিজনে একজন মেলে। 🌷",
+      "তোমার সাথে ফুচকা কিংবা আইসক্রিম খাওয়ার মধুর স্মৃতিগুলো। 🍦",
+      "তুমি শুধু আমার ভালোবাসা নও, আমার সবচেয়ে ভালো বন্ধু। 💫"
+    ];
+    let reasonIdx = 0;
+
+    const jarBtn = document.getElementById('jar-button');
+    const reasonText = document.getElementById('star-reason-text');
+
+    jarBtn.addEventListener('click', () => {
+      reasonText.style.opacity = 0;
+      reasonText.style.transform = "translateY(8px)";
+      
+      setTimeout(() => {
+        reasonIdx = (reasonIdx + 1) % reasonsList.length;
+        reasonText.textContent = `⭐ "${reasonsList[reasonIdx]}"`;
+        reasonText.style.transition = "all 0.3s ease";
+        reasonText.style.opacity = 1;
+        reasonText.style.transform = "translateY(0)";
+      }, 200);
+
+      // Mini star sparkle burst
+      confetti({
+        particleCount: 15,
+        spread: 45,
+        startVelocity: 20,
+        ticks: 50,
+        shapes: ['circle'],
+        colors: ['#ffd166', '#ffb3c6', '#fa3b73'],
+        origin: { y: 0.7 }
+      });
+    });
+
+    /* ========================================================
+       6. FLIP COMPLIMENT CARDS
+       ======================================================== */
+    const flipCards = document.querySelectorAll('.flip-card-elem');
+    flipCards.forEach(card => {
+      card.addEventListener('click', () => {
+        const inner = card.querySelector('.card-flipper');
+        inner.classList.toggle('flipped-state');
+      });
+    });
+
+    /* ========================================================
+       7. DODGING "NO" BUTTON & CELEBRATION "YES"
+       ======================================================== */
+    const noBtn = document.getElementById('no-dodge-btn');
+    const yesBtn = document.getElementById('yes-btn');
+    const proposalWrapper = document.getElementById('proposal-wrapper');
+    const yesCelebration = document.getElementById('yes-celebration');
+
+    const evasivePhrases = [
+      "ভুল বাটন! 😜",
+      "আরেহ না না! 🏃‍♂️",
+      "ধরতে পারলে না তো! 🙈",
+      "হ্যাঁ তে ক্লিক করো প্লিজ! 🥺",
+      "নো অপশন নেই ম্যাডাম! 💕"
+    ];
+
+    function dodgeNoButton() {
+      const maxX = 130;
+      const maxY = 60;
+      const randX = (Math.random() - 0.5) * maxX * 2;
+      const randY = (Math.random() - 0.5) * maxY * 2;
+
+      noBtn.style.transform = `translate(${randX}px, ${randY}px)`;
+      noBtn.innerText = evasivePhrases[Math.floor(Math.random() * evasivePhrases.length)];
+    }
+
+    noBtn.addEventListener('mouseenter', dodgeNoButton);
+    noBtn.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      dodgeNoButton();
+    });
+
+    yesBtn.addEventListener('click', () => {
+      proposalWrapper.classList.add('hidden');
+      yesCelebration.classList.remove('hidden');
+
+      // Grand Romantic Fireworks & Confetti
+      const duration = 4 * 1000;
+      const animationEnd = Date.now() + duration;
+
+      const fireworks = setInterval(function() {
+        const timeLeft = animationEnd - Date.now();
+        if (timeLeft <= 0) {
+          return clearInterval(fireworks);
+        }
+        confetti({
+          particleCount: 40,
+          startVelocity: 30,
+          spread: 360,
+          ticks: 60,
+          origin: {
+            x: Math.random(),
+            y: Math.random() * 0.5
+          }
+        });
+      }, 250);
+    });
+
+    /* ========================================================
+       8. SWEET LO-FI PIANO SYNTHESIZER (NO EXTERNAL AUDIO CRASH)
+       ======================================================== */
+    let audioContext = null;
+    let isMusicPlaying = false;
+    let melodyTimer = null;
+
+    const bgmBtn = document.getElementById('bgm-btn');
+    const bgmIcon = document.getElementById('bgm-icon');
+    const discRecord = document.getElementById('disc-record');
+    const audioStatus = document.getElementById('audio-status');
+
+    // Relaxing soft piano chords (C major / A minor dreamy melody)
+    const romanticChords = [
+      [261.63, 329.63, 392.00], // C
+      [220.00, 261.63, 329.63], // Am
+      [174.61, 220.00, 261.63], // F
+      [196.00, 246.94, 293.66], // G
+    ];
+    let chordIdx = 0;
+
+    function playPianoTone(freq, delay = 0) {
+      if (!audioContext) return;
+      try {
+        const osc = audioContext.createOscillator();
+        const gain = audioContext.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freq, audioContext.currentTime + delay);
+
+        // Soft bell-like envelope
+        gain.gain.setValueAtTime(0.0001, audioContext.currentTime + delay);
+        gain.gain.linearRampToValueAtTime(0.045, audioContext.currentTime + delay + 0.05);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + delay + 1.6);
+
+        osc.connect(gain);
+        gain.connect(audioContext.destination);
+
+        osc.start(audioContext.currentTime + delay);
+        osc.stop(audioContext.currentTime + delay + 1.7);
+      } catch (err) {
+        console.warn(err);
+      }
+    }
+
+    function playDreamyChord() {
+      const chord = romanticChords[chordIdx];
+      chord.forEach((freq, i) => {
+        playPianoTone(freq, i * 0.12);
+      });
+      chordIdx = (chordIdx + 1) % romanticChords.length;
+    }
+
+    bgmBtn.addEventListener('click', () => {
+      if (!isMusicPlaying) {
+        if (!audioContext) {
+          audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioContext.state === 'suspended') {
+          audioContext.resume();
+        }
+        isMusicPlaying = true;
+        discRecord.classList.add('animate-spin-slow');
+        bgmIcon.classList.remove('fa-play');
+        bgmIcon.classList.add('fa-pause');
+        audioStatus.textContent = "Playing Sweet Lullaby 🎵";
+
+        playDreamyChord();
+        melodyTimer = setInterval(playDreamyChord, 1200);
+      } else {
+        isMusicPlaying = false;
+        discRecord.classList.remove('animate-spin-slow');
+        bgmIcon.classList.remove('fa-pause');
+        bgmIcon.classList.add('fa-play');
+        audioStatus.textContent = "Click to resume music";
+        clearInterval(melodyTimer);
+      }
+    });
+  </script>
+</body>
+</html>
